@@ -1,1 +1,0 @@
-Todo compile to .exe for non-python enduser
