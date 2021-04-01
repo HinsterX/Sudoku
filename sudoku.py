@@ -17,7 +17,7 @@ board = [[5,3,0,0,7,0,0,0,0],
          [0,0,0,0,8,0,0,7,9]]
 boards = deepcopy(board)
 stopp = False
-
+board_sol = []
 
 def main(): # contain menus
     reboard()
@@ -104,6 +104,8 @@ def Generate_board():
     unsolve_n, unsolve_pos = find_num_unsolve()
     # no need to pass unsolve_pos. It will be visible in side function
     backtrack(0)
+    global board_sol
+    board_sol = deepcopy(board)
 
 def random_remove(n):
     global board
@@ -142,7 +144,7 @@ def empty_board():
     print_board()
 
 def to_pdf():
-    edit_doc.main(board)
+    edit_doc.main(board, board_sol)
 
 def check_unique_answer():
     #print("backtrack")
