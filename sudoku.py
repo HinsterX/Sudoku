@@ -19,7 +19,7 @@ boards = deepcopy(board)
 stopp = False
 
 
-def main():
+def main(): # contain menus
     reboard()
     while True:
         print('1. gen : Generate problem\n',
@@ -44,20 +44,21 @@ def main():
             algolithm_test()
         if cmd == "emp":
             empty_board()
-        if cmd == "fill":
+        if cmd == "fill": #todo
             reboard()
         if cmd == 'bac':
             backtrack_solve()
             print_board()
         else: continue
 
-def reboard():
+def reboard(): # reset the board
     global board
     global boards
     board = deepcopy(boards)
 
+### Use for generate a random sudoko problem
 def Generate_board():
-    ### Use for generate a random sudoko problem
+
     def backtrack(h,max):
         global stopp
         i = unsolve_pos[h][0]
