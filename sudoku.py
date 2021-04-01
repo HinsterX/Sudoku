@@ -4,6 +4,7 @@ import random
 import edit_doc
 from sys import exit
 from copy import deepcopy
+import os
 
 # Manual enter board
 board = [[5,3,0,0,7,0,0,0,0],
@@ -17,9 +18,9 @@ board = [[5,3,0,0,7,0,0,0,0],
          [0,0,0,0,8,0,0,7,9]]
 boards = deepcopy(board)
 stopp = False
+board_sol = []
 
-
-def main():
+def main(): # contain menus
     reboard()
     while True:
         print('1. gen : Generate problem\n',
@@ -37,32 +38,36 @@ def main():
             n_rm = int(input("How many: "))
             Generate_board()
             random_remove(n_rm)
-            to_pdf()
+            to_docx()
         if cmd == "exit":
             exit(0)
         if cmd == "test":
             algolithm_test()
         if cmd == "emp":
             empty_board()
-        if cmd == "fill":
+        if cmd == "fill": #todo
             reboard()
         if cmd == 'bac':
             backtrack_solve()
             print_board()
         else: continue
 
-def reboard():
+def reboard(): # reset the board
     global board
     global boards
     board = deepcopy(boards)
 
+### Use for generate a random sudoko problem
 def Generate_board():
-    ### Use for generate a random sudoko problem
-    def backtrack(h,max):
+    
+    # backtrack is simply find the way. If the way is valid it will go foward
+    # If there is no any valid way it step back and try another way.
+    def backtrack(h):
+        # h is the position in list unsolve_pos that we doing backtrack 
+        # max is the number of position unsolved # no need to pass max use it as global
         global stopp
-        i = unsolve_pos[h][0]
-        j = unsolve_pos[h][1]
-
+        i,j = unsolve_pos[h]
+        
         legal_num = generate_numberset()
 
         for n in range(9):
@@ -70,9 +75,10 @@ def Generate_board():
             board[i][j] = legal_num[n]
             #print(i,j)
             if check(i,j,legal_num[n]):
-                if h + 1 < max:
+                if h + 1 < unsolve_n:
                     #print_board()
-                    backtrack(h + 1,max)
+                    # if not last unsolve find number for next empty block
+                    backtrack(h + 1) 
                 else:
                     #print ("found")
                     stopp = True
@@ -84,15 +90,11 @@ def Generate_board():
     def generate_numberset():
         ### Random process ###
         legal_num = []
-        while True:
-            if len(legal_num) == 9:
-                break
+        while len(legal_num) < 9:
             rnd_num = random.randint(1, 9)
+            if rnd_num in legal_num:
+                continue
             legal_num.append(rnd_num)
-            for item in legal_num[:-1]:
-                if rnd_num == item:
-                    del legal_num[-1]
-                    break
         return legal_num
 
     global board
@@ -101,7 +103,10 @@ def Generate_board():
     empty_board()
     stopp = False
     unsolve_n, unsolve_pos = find_num_unsolve()
-    backtrack(0,unsolve_n)
+    # no need to pass unsolve_pos. It will be visible in side function
+    backtrack(0)
+    global board_sol
+    board_sol = deepcopy(board)
 
 def random_remove(n):
     global board
@@ -139,8 +144,9 @@ def empty_board():
             board[i][j] = 0
     print_board()
 
-def to_pdf():
-    edit_doc.main(board)
+def to_docx():
+    edit_doc.main(board, board_sol)
+    os.system('start result1.docx')
 
 def check_unique_answer():
     #print("backtrack")
@@ -223,6 +229,7 @@ def print_board2():
             print("")
         print("-------------------------")
 
+# list the number and position of unsolve block
 def find_num_unsolve():
     global board
     unsolve_n = 0

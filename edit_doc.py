@@ -21,11 +21,12 @@ def docx_replace_regex(doc_obj, regex , replace):
             for cell in row.cells:
                 docx_replace_regex(cell, regex , replace)
 
-def main(board):
+def main(board,board_sol):
     filename = "template.docx"
     doc = Document(filename)
     rows = ['a','b','c','d','e','f','g','h','i']
     cols = ['1','2','3','4','5','6','7','8','9']
+    # question
     for i in range(9):
         for j in range(9):
             regex1 = re.compile(rows[i]+cols[j])
@@ -33,4 +34,13 @@ def main(board):
             if board[i][j] == 0:
                 replace1 = " "
             docx_replace_regex(doc, regex1 , replace1)
+    # solution
+    sol_rows = ['j','k','l','m','n','o','p','q','r']
+    for i in range(9):
+        for j in range(9):
+            regex2 = re.compile(sol_rows[i]+cols[j])
+            replace2 = str(board_sol[i][j])
+            if board_sol[i][j] == 0:
+                replace2 = " "
+            docx_replace_regex(doc, regex2 , replace2)
     doc.save('result1.docx')
