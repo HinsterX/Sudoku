@@ -58,12 +58,15 @@ def reboard(): # reset the board
 
 ### Use for generate a random sudoko problem
 def Generate_board():
-
-    def backtrack(h,max):
+    
+    # backtrack is simply find the way. If the way is valid it will go foward
+    # If there is no any valid way it step back and try another way.
+    def backtrack(h):
+        # h is the position in list unsolve_pos that we doing backtrack 
+        # max is the number of position unsolved # no need to pass max use it as global
         global stopp
-        i = unsolve_pos[h][0]
-        j = unsolve_pos[h][1]
-
+        i,j = unsolve_pos[h]
+        
         legal_num = generate_numberset()
 
         for n in range(9):
@@ -71,9 +74,10 @@ def Generate_board():
             board[i][j] = legal_num[n]
             #print(i,j)
             if check(i,j,legal_num[n]):
-                if h + 1 < max:
+                if h + 1 < unsolve_n:
                     #print_board()
-                    backtrack(h + 1,max)
+                    # if not last unsolve find number for next empty block
+                    backtrack(h + 1) 
                 else:
                     #print ("found")
                     stopp = True
@@ -98,7 +102,8 @@ def Generate_board():
     empty_board()
     stopp = False
     unsolve_n, unsolve_pos = find_num_unsolve()
-    backtrack(0,unsolve_n)
+    # no need to pass unsolve_pos. It will be visible in side function
+    backtrack(0)
 
 def random_remove(n):
     global board
@@ -220,6 +225,7 @@ def print_board2():
             print("")
         print("-------------------------")
 
+# list the number and position of unsolve block
 def find_num_unsolve():
     global board
     unsolve_n = 0
