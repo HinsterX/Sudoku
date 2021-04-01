@@ -85,15 +85,11 @@ def Generate_board():
     def generate_numberset():
         ### Random process ###
         legal_num = []
-        while True:
-            if len(legal_num) == 9:
-                break
+        while len(legal_num) < 9:
             rnd_num = random.randint(1, 9)
+            if rnd_num in legal_num:
+                continue
             legal_num.append(rnd_num)
-            for item in legal_num[:-1]:
-                if rnd_num == item:
-                    del legal_num[-1]
-                    break
         return legal_num
 
     global board
