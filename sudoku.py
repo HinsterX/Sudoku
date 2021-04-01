@@ -4,6 +4,7 @@ import random
 import edit_doc
 from sys import exit
 from copy import deepcopy
+import os
 
 # Manual enter board
 board = [[5,3,0,0,7,0,0,0,0],
@@ -37,7 +38,7 @@ def main(): # contain menus
             n_rm = int(input("How many: "))
             Generate_board()
             random_remove(n_rm)
-            to_pdf()
+            to_docx()
         if cmd == "exit":
             exit(0)
         if cmd == "test":
@@ -143,8 +144,9 @@ def empty_board():
             board[i][j] = 0
     print_board()
 
-def to_pdf():
+def to_docx():
     edit_doc.main(board, board_sol)
+    os.system('start result1.docx')
 
 def check_unique_answer():
     #print("backtrack")
